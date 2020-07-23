@@ -56,6 +56,9 @@ Dino.prototype.givenFact = function() {
 
 // method to generate a random fact from 6 facts generated using the above functions
 Dino.prototype.getFact = function() {
+    if (this.species === 'Pigeon') {
+        return 'All birds are considered dinosaurs.'
+    }
     let facts = {
         1: this.weightFact(),
         2: this.heightFact(),
@@ -86,8 +89,16 @@ const pteranodon = new Dino('Pteranodon', 44, 20, 'carnivor', 'North America',
 const pigeon = new Dino('Pigeon', 0.5, 9, 'herbavor', 'World Wide',
   'Holocene', 'All birds are living dinosaurs.');
 
-console.log(pigeon);
-
+const dinoList = [
+    triceratops,
+    trex,
+    anklyosrs,
+    brachiosrs,
+    stegosrs,
+    elasmosrs,
+    pteranodon,
+    pigeon
+]
     // Create Human Object
 let human = {};
 
@@ -102,6 +113,7 @@ document.querySelector("#btn").addEventListener('click', e => {
             diet: document.querySelector('#diet').value
         }
     })();
+    appendTiles();
 });
 
 
@@ -117,8 +129,31 @@ document.querySelector("#btn").addEventListener('click', e => {
     // NOTE: Weight in JSON file is in lbs, height in inches.
 
 
-    // Generate Tiles for each Dino in Array
-  
+// Generate Tiles for each Dino in Array
+function appendTiles() {
+    let fragment = document.createDocumentFragment();
+    let i = 0;
+    for (let dino of dinoList) {
+        let imageName = `${dino['species'].toLowerCase()}.png`;
+        let tile = document.createElement('div');
+        tile.classList.add('grid-item');
+        tile.innerHTML = `
+            <h4>${dino['species']}</h4>
+            <img src="./images/${imageName}">
+            <p>${dino.getFact()}</p>
+        `
+        fragment.appendChild(tile);
+    }
+    let humanTile = document.createElement('div');
+    humanTile.classList.add('grid-item');
+    humanTile.innerHTML = `
+        <h2>${human.name}</h2>
+        <img src="./images/human.png">
+    `
+    fragment.insertBefore(humanTile, fragment.childNodes[4]);
+    document.querySelector('#dino-compare').classList.add('hidden');
+    document.querySelector('#grid').appendChild(fragment);
+}
         // Add tiles to DOM
 
     // Remove form from screen
